@@ -1,12 +1,12 @@
 ---
-title: "Carrera La Luz 2022"
+title: "Carrera De La Luz 2022"
 subtile: "Actividad 1 - Métodos y Simulación Estadística"
 output: 
   flexdashboard::flex_dashboard:
     theme:
       bg: "#FFFFFF"
-      fg: "#034A94" 
-      primary: "#034A94" 
+      fg: "#000000" 
+      primary: "#FFA500" 
       base_font:
         google: Sen
       code_font:
@@ -71,141 +71,168 @@ row.names(t2h)=categoria
 Column {data-width=700 .tabset}
 -----------------------------------------------------------------------
 
-### Tiempos de carrera
+### Porcentaje de Hombres y Mujeres
 
 ```{r}
-paleta6=c("#447270", "#6B9493", "#F6E271", "#F6B916", "#F69312", "#BC6C25")
-p1=ggplot(CarreraLuz22F, aes(y=timerun/60, x=categoria))+
-  geom_jitter(color="#034A94", size=1, alpha=0.9) +
-  aes(color=paleta6)+
-  labs(title = " ",
-       y= "tiempo - min",
-       x= "categorías")+ 
-  #facet_wrap(~ sex)
-  #facet_grid(vars(sex), scale="free")+
-  ylim(0,170)+
-  Theme2
+paleta6=c("#FF00FF", "#800080", "#F6E271", "#F6B916", "#F69312", "#FF0000")
+
+
+# Contar la frecuencia de cada valor en la variable sex
+frecuencias_sex <- table(CarreraLuz22$sex)
+
+# Calcular los porcentajes
+porcentajes_sex <- prop.table(frecuencias_sex) * 100
+
+# Crear un vector de colores para cada valor en la variable sex
+colores_sex <- c("Hombre" = "#0000FF", "Mujer" = "#FF00FF")
+
+# Crear el gráfico de pastel
+p1=ggplot(data.frame(Sexo = names(porcentajes_sex), porcentajes = porcentajes_sex), aes(x = "", y = porcentajes_sex, fill = Sexo)) +
+  geom_bar(width = 1, stat = "identity") +
+  geom_text(aes(label = sprintf("%.1f%%", porcentajes_sex)), position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = colores_sex) +
+  labs(title = "",
+       x = "",
+       y = "Sexo (%)") +
+  theme_minimal()
+
+
+
 
 p1
 
 ```
 
-### Hombre por categorías
+### Tiempo de Hombres por Edad
 
 ```{r, fig.height=3}
-ggplot(CarreraLuz22M, aes(x = categoria, y = timerun/60 )) +
-  geom_boxplot(aes(fill = categoria)) + 
-  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
-  labs(title = "", y= "tiempo - min", x= "categorías")+
-  scale_fill_brewer() +
-  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
-  theme(legend.position = "none")
+
+# Agrupar la data frame por edad y calcular el promedio del timerun para cada edad
+promedios_timerun_edad <- aggregate(timerun ~ edad, data = CarreraLuz22M, mean)
+
+# Crear el gráfico de líneas
+ggplot(promedios_timerun_edad, aes(x = edad, y = timerun/60)) +
+  geom_line(color="#0000FF") +
+  labs(x = "Edad",
+       y = "Promedio del tiempo de carrera (min)") +
+  theme_dark()
+
 t2h
 ```
 
-### Mujeres por categoría
+### Tiempo de Mujeres por Edad
 ```{r, fig.height=3}
-ggplot(CarreraLuz22F, aes(x = categoria, y = timerun/60 )) +
-  geom_boxplot(aes(fill = categoria)) + 
-  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
-  labs(title = "", y= "tiempo - min", x= "categorías")+
-  scale_fill_brewer() +
-  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
-  theme(legend.position = "none")
+# Agrupar la data frame por edad y calcular el promedio del timerun para cada edad
+promedios_timerun_edad <- aggregate(timerun ~ edad, data = CarreraLuz22F, mean)
+
+# Crear el gráfico de líneas
+ggplot(promedios_timerun_edad, aes(x = edad, y = timerun/60)) +
+  geom_line(color="#FF00FF") +
+  labs(x = "Edad",
+       y = "Promedio del tiempo de carrera (min)") +
+  theme_dark()
 t2m
 ```
 
-### Más información
+### Tiempo respecto a Edad
 
-```{r, echo=FALSE, out.width="30%", fig.align = "center"}
-knitr::include_graphics("carrera1.png")
+```{r, fig.height=3}
+ggplot(CarreraLuz22, aes(x = edad, y = timerun/60)) +
+  geom_point(color="green") +
+  labs(x = "Edad",
+       y = "Tiempo de carrera (min)") +
+  scale_y_continuous(limits = c(0, 120)) +
+  theme_classic()
 ```
-
-**10.07 K** Participantes desde los 15 años en adelante.
-
-**Salida**: Hotel Intercontinental, calle 5, Carrera 6, carrera 4c, carrera1, carrera 4, calle de la escopeta, museo arqueológico la merced, bulevar del rio, puente Ortiz, av 2N, parque lineal rio Cali av2n, calle 25, parque lineal av1n, calle 13, carrera 1 calle 12, carrera 5, calle 10, gobernación del valle, edificio Aristi carrera 9, calle 9 plazoleta de san francisco, bulevar del rio, calle 8, carrera 4, carrera 3ª, parque del peñón, carrera 3, carrera 3ª oeste, calle 5 oeste, carrera 4, av Belalcázar, carrera 2ª oeste, librería nacional, carrera 1c, museo la tertulia, av Colombia, pepe ganga, carrera 3, carrera 2, carrera 3ª, av Colombia, carrera 4, meta hotel intercontinental. [juanchocorrelon.com](https://juanchocorrelon.com/intercontinental-10k-luz-2022/#10k)
 
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Tiempo mujeres categoría Abierta
+### Frecuencia mujeres por edad
 
 ```{r}
 # seleccion de bases
-dataFc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Mujer" & CarreraLuz22$categoria=="2. Abierta")) # dataset de mujeres
-x=dataFc2$timerun/60
-hist(x, xlim=c(30,120), ylim=c(0,80),las=1,
+dataFc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Mujer")) # dataset de mujeres
+
+x=dataFc2$edad
+hist(x, xlim=c(10,80), ylim=c(0,250),las=1,
 main = " ",
-xlab="tiempo (min)",
-ylab = "frecuencia",
-col ="#ee964b")
+xlab="Edad",
+ylab = "Frecuencia",
+col ="#FF00FF")
 ```
 
-### Tiempo hombres categoría Abierta
+### Frecuencia hombres por edad
 
 ```{r}
 # seleccion de bases
-dataMc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Hombre" & CarreraLuz22$categoria=="2. Abierta")) # dataset de mujeres
-x=dataMc2$timerun/60
-hist(x, xlim=c(30,120), ylim=c(0,250),las=1,
+dataMc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Hombre")) # dataset de mujeres
+x=dataMc2$edad
+hist(x, xlim=c(10,80), ylim=c(0,250),las=1,
 main = " ",
-xlab="tiempo (min)",
-ylab = "frecuencia",
-col ="#ee964b")
+xlab="Edad",
+ylab = "Frecuencia",
+col ="#0000FF")
 ```
 
 Column { data-width=50 }
 -----------------------------------------------------------------------
-### minimo  {.value-box}
+### hombres  {.value-box}
 ```{r}
-valueBox(value =paste(round(min(CarreraLuz22$timerun/60),1), "min"), 
-         caption = "Tiempo ganador", 
-         icon = "fa-thumbs-up", 
-         color = "#0EB0C6")
+valueBox(value =paste(length(CarreraLuz22M$id),"Hombres"), 
+         caption = "Cantidad de Hombres", 
+         icon = "", 
+         color = "#FF0000")
 ```
 
 
-### velocidad  {.value-box}
+### mujeres  {.value-box}
 ```{r}
-valueBox(value =paste(round(10070/min(CarreraLuz22$timerun),2),"m/s"), # ud1$cierre, 
-         caption = "Máxima velocidad", 
-         icon = "fa-clock", 
-         color = "#0EB0C6")
+valueBox(value =paste(length(CarreraLuz22F$id),"Mujeres"), 
+         caption = "Cantidad de Mujeres", 
+         icon = "",  
+         color = "#FFA500")
 ```
 
 
-### distancia  {.value-box}
+### tiempoM  {.value-box}
 ```{r}
-valueBox(value = paste(10.07,"Km"), #ud1$min, 
-         caption = "Distancia recorrida", 
-         icon = "fa-solod fa-person-walking-arrow-right", 
-         color = "#0EB0C6")
+valueBox(value = paste(round(mean(CarreraLuz22M$timerun/60)),"min"), 
+         caption = "Tiempo Promedio Hombres", 
+         icon = "", 
+         color = "#FFFF00")
 ```
 
 
-### volumen  {.value-box}
+### tiempoF  {.value-box}
 ```{r}
-valueBox(value = paste(length(CarreraLuz22$timerun),"atletas"), 
-         caption = "Número de participantes", 
-         icon = "fa-people", 
-         color = "#0EB0C6")
+valueBox(value = paste(round(mean(CarreraLuz22F$timerun/60)),"min"), 
+         caption = "Tiempo Promedio Mujeres", 
+         icon = "",  
+         color = "#00FF00")
 ```
 
 
-### porcentaje  {.value-box}
+### mejorM  {.value-box}
 ```{r}
-valueBox(value = paste(round(length(CarreraLuz22F$timerun)/length(CarreraLuz22$timerun)*100,2),"%"), 
-         caption = "Porcentaje mujeres", 
-         icon = "  ", 
-         color = "#0EB0C6")
+valueBox(value = paste(round(min(CarreraLuz22M$timerun/60)),"min"), 
+         caption = "Mejor Tiempo Hombres", 
+         icon = "",   
+         color = "#0000FF")
 ```
 
-### promedio  {.value-box}
+### mejorF  {.value-box}
 ```{r}
-valueBox(value = paste(round(mean(CarreraLuz22$timerun/60),2),"min"), 
-         caption = "Tiempo promedio de carrera", 
-         icon = "  ", 
-         color = "#0EB0C6")
+valueBox(value = paste(round(min(CarreraLuz22F$timerun/60)),"min"), 
+         caption = "Mejor Tiempo Mujeres", 
+         icon = "", 
+         color = "#4B0082")
 ```
 
-
+### peor  {.value-box}
+```{r}
+valueBox(value = paste(round(max(CarreraLuz22$timerun/60)),"min"), 
+         caption = "Peor Tiempo", 
+         icon = "",  
+         color = "#9400D3")
