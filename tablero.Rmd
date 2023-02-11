@@ -135,45 +135,60 @@ ggplot(promedios_timerun_edad, aes(x = edad, y = timerun/60)) +
 t2m
 ```
 
-### Tiempo respecto a Edad
+### Edad por Género
 
 ```{r, fig.height=3}
-ggplot(CarreraLuz22, aes(x = edad, y = timerun/60)) +
-  geom_point(color="green") +
-  labs(x = "Edad",
-       y = "Tiempo de carrera (min)") +
-  scale_y_continuous(limits = c(0, 120)) +
-  theme_classic()
+ggplot(CarreraLuz22, aes(x=sex, y=edad, fill=sex)) +
+  geom_boxplot() +
+  xlab("Género") +
+  ylab("Edad") +
+  ggtitle("Distribución de la edad por género") +
+  scale_fill_manual(values=c("#0000FF", "#FF00FF"))
 ```
 
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Frecuencia mujeres por edad
+### Frecuencia mujeres por categoría
 
 ```{r}
-# seleccion de bases
-dataFc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Mujer")) # dataset de mujeres
+# Convertir la variable categoria en una variable categórica numérica
+CarreraLuz22F$categoria_num <- as.numeric(factor(CarreraLuz22F$categoria))
 
-x=dataFc2$edad
-hist(x, xlim=c(10,80), ylim=c(0,250),las=1,
-main = " ",
-xlab="Edad",
-ylab = "Frecuencia",
-col ="#FF00FF")
+# Crear el histograma de frecuencias de la variable categoria_num
+# convertir la variable 'categoria' en una variable factor
+CarreraLuz22F$categoria <- as.factor(CarreraLuz22F$categoria)
+
+# contar las frecuencias de la variable 'categoria'
+categoria_freq <- table(CarreraLuz22F$categoria)
+
+# crear el gráfico de barras
+ggplot(data.frame(categoria_freq), aes(x=Var1, y=Freq)) +
+  geom_bar(stat="identity", fill = "#FF00FF") +
+  xlab("Categoría") +
+  ylab("Frecuencia") +
+  ggtitle("")
 ```
 
-### Frecuencia hombres por edad
+### Frecuencia hombres por categoría
 
 ```{r}
-# seleccion de bases
-dataMc2=subset(CarreraLuz22, (CarreraLuz22$sex=="Hombre")) # dataset de mujeres
-x=dataMc2$edad
-hist(x, xlim=c(10,80), ylim=c(0,250),las=1,
-main = " ",
-xlab="Edad",
-ylab = "Frecuencia",
-col ="#0000FF")
+# Convertir la variable categoria en una variable categórica numérica
+CarreraLuz22M$categoria_num <- as.numeric(factor(CarreraLuz22M$categoria))
+
+# Crear el histograma de frecuencias de la variable categoria_num
+# convertir la variable 'categoria' en una variable factor
+CarreraLuz22M$categoria <- as.factor(CarreraLuz22M$categoria)
+
+# contar las frecuencias de la variable 'categoria'
+categoria_freq <- table(CarreraLuz22M$categoria)
+
+# crear el gráfico de barras
+ggplot(data.frame(categoria_freq), aes(x=Var1, y=Freq)) +
+  geom_bar(stat="identity", fill = "#0000FF") +
+  xlab("Categoría") +
+  ylab("Frecuencia") +
+  ggtitle("")
 ```
 
 Column { data-width=50 }
