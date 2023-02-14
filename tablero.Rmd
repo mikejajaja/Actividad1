@@ -146,6 +146,15 @@ ggplot(CarreraLuz22, aes(x=sex, y=edad, fill=sex)) +
   scale_fill_manual(values=c("#0000FF", "#FF00FF"))
 ```
 
+### Análisis
+
+De acuerdo con los datos mostrados es posible evidenciar que los participantes de la carrera fueron en su mayoría hombres, siendo estos más del 60% de los competidores. Analizando la cantidad de inscritos por categoría en ambos sexos se encuentra que su comportamiento es proporcional en ambos casos, siendo la categoría abierta la más llena y la categoría juvenil la de menos inscritos.
+
+Adicionalmente, se comparan los mejores tiempos y los tiempos promedio de ambos sexos y gracias a ello es posible afirmar que en ambos casos los hombres tienen un mejor tiempo.
+
+Al revisar los tiempos por edad de cada sexo en el gráfico de lineas se observa que los tiempos de carrera en general se mantienen constantes hasta después de los 60 años aproximadamente que este tiempo empieza a incrementar. Además, se analiza el el diagrama de cajas y bigotes que compara el comportamiento de los cuartiles de edad por género en donde se observa que tanto en el caso de los hombres como en el de las mujeres la dstribución es similar.
+
+
 Column {data-width=400}
 -----------------------------------------------------------------------
 
